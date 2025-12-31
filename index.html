@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <style>
+    :root {
+      --notion-text: #111;
+      --notion-sub-text: rgb(255, 255, 255);
+      --tag-bg: #111;
+    }
+
+    body, html { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: transparent; }
+    
+    .swiper {
+        width: 100%;
+        height: auto;
+        padding-bottom: 40px; /* 留空間給圓點 */
+    }
+
+    .swiper-slide {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none; /* 移除連結底線 */
+      color: inherit;
+    }
+
+    /* 圖片樣式 */
+    .image-container {
+      width: 100%;
+      aspect-ratio: 16 / 9; /* 強制圖片比例，避免畫面跳動 */
+      overflow: hidden;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      aspect-ratio: 21 / 9;
+    }
+    
+    .image-container img {
+      width: 100%;
+      object-fit: cover;
+    }
+
+    /* 資訊區塊樣式 */
+    .info-container {
+        width: 90%;
+        margin: 50px auto 10px auto;
+    }
+
+    .date { 
+      font-size: 2rem; 
+      color: var(--notion-text); 
+      margin-bottom: 4px; 
+    }
+
+    h3 { 
+      font-size: 3rem; 
+      margin: 4px 0; 
+      color: var(--notion-text); 
+      line-height: 1.4;
+    }
+
+    .tags { display: flex; gap: 8px; margin-top: 8px; }
+
+    .tag {
+      font-size: 1.75rem;
+      padding: 5px 20px;
+      background: var(--tag-bg);
+      border-radius: 10px;
+      color: var(--notion-sub-text);
+    }
+
+    /* 圓點樣式微調 */
+    .swiper-pagination-bullet-active { background: #000; }
+
+  </style>
+</head>
+<body>
+
+  <div class="swiper">
+    <div class="swiper-wrapper">
+      
+      <a href="#" target="_top" class="swiper-slide">
+        <div class="image-container">
+          <img src="https://images.spr.so/cdn-cgi/imagedelivery/j42No7y-dcokJuNgXeA0ig/32d8b4f3-f63a-4e9e-a1fb-8fc249cb9905/20240223_142057/w=1080,quality=90,fit=scale-down">
+        </div>
+        <div class="info-container">
+          <div class="date">2023.10.27</div>
+          <h3>這是第一個標題名稱</h3>
+          <div class="tags">
+            <span class="tag">Company</span>
+            <span class="tag">活動</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" target="_top" class="swiper-slide">
+        <div class="image-container">
+          <img src="https://images.spr.so/cdn-cgi/imagedelivery/j42No7y-dcokJuNgXeA0ig/32d8b4f3-f63a-4e9e-a1fb-8fc249cb9905/20240223_142057/w=1080,quality=90,fit=scale-down">
+        </div>
+        <div class="info-container">
+          <div class="date">2023.10.28</div>
+          <h3>這是第二個標題名稱</h3>
+          <div class="tags">
+            <span class="tag">標籤二</span>
+            <span class="tag">公告</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" target="_top" class="swiper-slide">
+        <div class="image-container">
+          <img src="https://images.spr.so/cdn-cgi/imagedelivery/j42No7y-dcokJuNgXeA0ig/32d8b4f3-f63a-4e9e-a1fb-8fc249cb9905/20240223_142057/w=1080,quality=90,fit=scale-down">
+        </div>
+        <div class="info-container">
+          <div class="date">2023.10.28</div>
+          <h3>這是第二個標題名稱</h3>
+          <div class="tags">
+            <span class="tag">標籤二</span>
+            <span class="tag">公告</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" target="_top" class="swiper-slide">
+        <div class="image-container">
+          <img src="https://images.spr.so/cdn-cgi/imagedelivery/j42No7y-dcokJuNgXeA0ig/32d8b4f3-f63a-4e9e-a1fb-8fc249cb9905/20240223_142057/w=1080,quality=90,fit=scale-down">
+        </div>
+        <div class="info-container">
+          <div class="date">2023.10.28</div>
+          <h3>這是第二個標題名稱</h3>
+          <div class="tags">
+            <span class="tag">標籤二</span>
+            <span class="tag">公告</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" target="_top" class="swiper-slide">
+        <div class="image-container">
+          <img src="https://images.spr.so/cdn-cgi/imagedelivery/j42No7y-dcokJuNgXeA0ig/32d8b4f3-f63a-4e9e-a1fb-8fc249cb9905/20240223_142057/w=1080,quality=90,fit=scale-down">
+        </div>
+        <div class="info-container">
+          <div class="date">2023.10.28</div>
+          <h3>這是第二個標題名稱</h3>
+          <div class="tags">
+            <span class="tag">標籤二</span>
+            <span class="tag">公告</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" target="_top" class="swiper-slide">
+        <div class="image-container">
+          <img src="https://images.spr.so/cdn-cgi/imagedelivery/j42No7y-dcokJuNgXeA0ig/32d8b4f3-f63a-4e9e-a1fb-8fc249cb9905/20240223_142057/w=1080,quality=90,fit=scale-down">
+        </div>
+        <div class="info-container">
+          <div class="date">2023.10.28</div>
+          <h3>這是第二個標題名稱</h3>
+          <div class="tags">
+            <span class="tag">標籤二</span>
+            <span class="tag">公告</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    const swiper = new Swiper('.swiper', {
+      loop: true,
+      autoplay: { delay: 1000 },
+      pagination: { el: '.swiper-pagination', clickable: true },
+      slidesPerView: 1.2,
+      spaceBetween: 30,
+      centeredSlides: true,
+    });
+  </script>
+</body>
+</html>
