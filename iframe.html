@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notion Carousel Iframe</title>
+    <style>
+    .custom-carousel-wrapper {
+        width: 100%;
+        aspect-ratio: 16 / 11; /* 寬 16 比 高 11，預留文字空間 */
+    }
+    #carousel-iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+    </style>
+</head>
+<body>
+    <div class="custom-carousel-wrapper">
+    <iframe 
+        src="https://xxzrainy.github.io/jp-website-carousel/" 
+        style="width: 100%; border: none; overflow: hidden;" 
+        id="carousel-iframe"
+        title="Notion Carousel"
+    ></iframe>
+    </div>
+
+    <script>
+    // 自動調整 iframe 高度的腳本（選用）
+    // 為了確保 iframe 不會出現內部捲軸，我們可以固定一個高度比例
+    function adjustIframeHeight() {
+        const iframe = document.getElementById('carousel-iframe');
+        if (iframe) {
+        // 假設你的輪播圖比例是 16:9 加上下方文字空間
+        // 你可以根據實際內容調整這個數值 (例如 1.2 是寬度的 1.2 倍高)
+        const width = iframe.offsetWidth;
+        iframe.style.height = (width * 0.8) + "px"; 
+        }
+    }
+
+    window.addEventListener('resize', adjustIframeHeight);
+    window.addEventListener('load', adjustIframeHeight);
+    </script>
+</body>
+</html>
