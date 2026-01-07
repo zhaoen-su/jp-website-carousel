@@ -1,0 +1,30 @@
+name: Deploy Website
+
+on:
+  push:
+    branches: ["main"] # 當 main 分支有更新時觸發
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout代碼
+        uses: actions/checkout@v4
+
+      - name: 設定 Node.js # 如果你有用 npm 處理 .env
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 安裝套件並編譯
+        run: |
+          npm install
+          npm run build # 這裡會把 .env 的變數注入 JS
+        env:
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }} # 從 GitHub 讀取加密變數
+          NOTION_DATABASE: ${{ secrets.NOTION_DATABASE }} # 從 GitHub 讀取加密變數
+
+      - name: 部署到 GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist # 編譯後的資料夾
