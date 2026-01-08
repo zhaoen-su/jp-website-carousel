@@ -10,15 +10,16 @@
       padding: 0;
     }
     .swiper {
-        width: 100%;
-        padding-bottom: 40px; /* 留空間給圓點 */
+      width: 100%;
+      padding-bottom: 40px; /* 留空間給圓點 */
     }
 
     .swiper-slide {
       display: flex;
       flex-direction: column;
-      text-decoration: none; /* 移除連結底線 */
+      text-decoration: none;
       color: inherit;
+
     }
 
     /* 圖片樣式 */
@@ -29,6 +30,13 @@
       border-radius: 12px;
       margin-bottom: 12px;
       aspect-ratio: 21 / 9;
+      /* 單位圖片寬度*/
+      max-width: 985px;
+      margin: 0 auto;
+
+    }
+
+    .swiper-wrapper{
     }
     
     .image-container img {
@@ -158,8 +166,8 @@
       loop: true,
       autoplay: { delay: 5000 },
       pagination: { el: '.swiper-pagination', clickable: true },
-      slidesPerView: 1.2,
-      spaceBetween: 30,
+      slidesPerView: '1.7',
+      spaceBetween: 50,
       centeredSlides: true,
     });
   </script>
