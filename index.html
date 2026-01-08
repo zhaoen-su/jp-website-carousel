@@ -73,7 +73,7 @@
 <body>
 
   <div class="swiper">
-    <div class="swiper-wrapper"></div>
+    <div class="swiper-wrapper" id="swiper-wrapper"></div>
     <div class="swiper-pagination"></div>
   </div>
 
@@ -84,28 +84,27 @@
         const wrapper = document.getElementById('swiper-wrapper');
         
         try {
-          // 現在直接 fetch Worker 即可，不需要加上 Authorization Header，因為 Worker 會幫你加
+
           const response = await fetch(WORKER_URL, {
-            method: 'POST'
+            method: 'POST',
           });
         
 
           const data = await response.json(); 
-          console.log("原始資料：", data);
 
           // 遍歷資料
           wrapper.innerHTML = data.results.map(item => {
-            // --- 以下為關鍵修正：對應 Notion 欄位路徑 ---
-            // 假設標題欄位叫 "Name"
-            const title = item.properties.Name?.title[0]?.plain_text || "無標題";
-            // 假設日期欄位叫 "Date"
+            
+            // 標題
+            const title = item.properties.Name?.title[0]?.plain_text || "最新消息";
+            // 日期
             const date = item.properties.Date?.date?.start || "無日期";
-            // 假設圖片欄位叫 "Image"，抓取檔案網址
+            // 圖片
             const img = item.properties.Image?.files[0]?.file?.url || item.properties.Image?.files[0]?.external?.url || '預設圖片網址';
-            // 假設連結欄位叫 "URL"
+            // URL
             const link = item.properties.URL?.url || "#";
             
-            // 處理標籤 (假設欄位叫 "Tags")
+            // 標籤
             const tags = item.properties.Tags?.multi_select || [];
             const tagsHTML = tags.map(tag => `<span class="tag" style="background-color: ${tag.color}">${tag.name}</span>`).join('');
             // ------------------------------------------
