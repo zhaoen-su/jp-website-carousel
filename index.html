@@ -86,27 +86,44 @@
         try {
 
           const response = await fetch(WORKER_URL, {
-            method: 'POST',
+            method: 'POST', // 確保你的 Worker 真的需要 POST (通常 GET 也可以)
           });
-        
 
           const data = await response.json(); 
 
-          // 遍歷資料
-          wrapper.innerHTML = data.results.map(item => {
+          // 檢查 results 是否存在 (Notion API 回傳的資料是在 results 陣列裡)
+          const listData = data.results || [];
+
+          wrapper.innerHTML = listData.map(item => {
+              
+            // 1. 修正標題抓取 (對應 JSON 的 "title")
+            // 使用 map + join 是為了處理標題被切斷成多個片段的情況
+            const title = item.properties.title?.title?.map(t => t.plain_text).join("") || "最新消息";
+
+            // 2. 修正日期抓取 (對應 JSON 的 "date")
+            const date = item.properties.date?.date?.start || "無日期";
+
+            // 3. 修正圖片抓取
+            // ⚠️ 警告：你的 JSON 裡目前「沒有」任何圖片欄位 (cover 是 null)
+            // 這裡我先寫好邏輯，若你之後加上 "Image" 欄位或是設定 Cover 就能運作
+            const img = item.cover?.file?.url || 
+                        item.cover?.external?.url || 
+                        item.properties.Image?.files?.[0]?.file?.url || 
+                        item.properties.Image?.files?.[0]?.external?.url || 
+                        'https://placehold.co/600x400?text=No+Image'; // 暫時預設圖
+
+            // 4. 修正連結 (使用 Notion 內建的 public_url)
+            const link = item.public_url || item.url || "#";
             
-            // 標題
-            const title = item.properties.Name?.title[0]?.plain_text || "最新消息";
-            // 日期
-            const date = item.properties.Date?.date?.start || "無日期";
-            // 圖片
-            const img = item.properties.Image?.files[0]?.file?.url || item.properties.Image?.files[0]?.external?.url || '預設圖片網址';
-            // URL
-            const link = item.properties.URL?.url || "#";
+            // 5. 修正標籤抓取 (對應 JSON 的 "category")
+            const tags = item.properties.category?.multi_select || [];
             
-            // 標籤
-            const tags = item.properties.Tags?.multi_select || [];
-            const tagsHTML = tags.map(tag => `<span class="tag" style="background-color: ${tag.color}">${tag.name}</span>`).join('');
+            // Notion 回傳的顏色 (如 "red") 可以直接用，但 "default" 在 CSS 會無效，需注意
+            const tagsHTML = tags.map(tag => {
+              const colorStyle = tag.color === 'default' ? '#ccc' : tag.color; // 簡單處理預設色
+              return `<span class="tag" style="background-color: ${colorStyle}; padding: 2px 6px; border-radius: 4px; color: white; margin-right: 4px;">${tag.name}</span>`;
+            }).join('');
+
             // ------------------------------------------
 
             return `
@@ -125,8 +142,6 @@
             `;
           }).join('');
         
-          console.log("資料遍歷渲染完成！");
-          
           // 渲染完後啟動 Swiper
           if (typeof initSwiper === "function") {
             initSwiper(); 
