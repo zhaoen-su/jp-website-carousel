@@ -104,12 +104,8 @@
             const date = item.properties.date?.date?.start || "無日期";
 
             // 3. 修正圖片抓取
-            // ⚠️ 警告：你的 JSON 裡目前「沒有」任何圖片欄位 (cover 是 null)
-            // 這裡我先寫好邏輯，若你之後加上 "Image" 欄位或是設定 Cover 就能運作
-            const img = item.cover?.file?.url || 
-                        item.cover?.external?.url || 
-                        item.properties.Image?.files?.[0]?.file?.url || 
-                        item.properties.Image?.files?.[0]?.external?.url || 
+            const img = item.properties.cover?.files?.[0]?.file?.url || 
+                        item.properties.cover?.files?.[0]?.external?.url || 
                         'https://placehold.co/600x400?text=No+Image'; // 暫時預設圖
 
             // 4. 修正連結 (使用 Notion 內建的 public_url)
