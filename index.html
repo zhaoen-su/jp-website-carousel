@@ -78,49 +78,68 @@
   </div>
 
   <script>
-    const API_URL =
+      const WORKER_URL = "https://jp-website-slider-notionapi.zhaoen.workers.dev";
 
-    async function fetchAndRenderNews() {
-      try {
-        // 2. 呼叫 API 取得資料
-        const response = await fetch(API_URL);
-        const newsData = await response.json(); // 假設回傳的是一個陣列 []
+      async function fetchAndRenderNews() {
+        const wrapper = document.getElementById('swiper-wrapper');
+        
+        try {
+          // 現在直接 fetch Worker 即可，不需要加上 Authorization Header，因為 Worker 會幫你加
+          const response = await fetch(WORKER_URL, {
+            method: 'POST'
+          });
+        
 
-        const wrapper = document.getElementById('swiper-container');
+          const data = await response.json(); 
+          console.log("原始資料：", data);
 
-        // 3. 使用 map 遍歷資料並生成 HTML
-        // map 會跑過陣列中的每一個物件 (item)，並將其轉換成 HTML 字串
-        wrapper.innerHTML = newsData.map(item => {
-          // 這裡可以處理「如果沒有圖片」或「標籤格式」的邏輯
-          const tagsHTML = item.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
-          
-          return `
-            <a href="${item.link}" target="_top" class="swiper-slide">
-              <div class="image-container">
-                <img src="${item.img || '預設圖片網址'}" alt="${item.title}">
-              </div>
-              <div class="info-container">
-                <div class="date">${item.date}</div>
-                <h3>${item.title}</h3>
-                <div class="tags">
-                  ${tagsHTML}
-                    </div>
+          // 遍歷資料
+          wrapper.innerHTML = data.results.map(item => {
+            // --- 以下為關鍵修正：對應 Notion 欄位路徑 ---
+            // 假設標題欄位叫 "Name"
+            const title = item.properties.Name?.title[0]?.plain_text || "無標題";
+            // 假設日期欄位叫 "Date"
+            const date = item.properties.Date?.date?.start || "無日期";
+            // 假設圖片欄位叫 "Image"，抓取檔案網址
+            const img = item.properties.Image?.files[0]?.file?.url || item.properties.Image?.files[0]?.external?.url || '預設圖片網址';
+            // 假設連結欄位叫 "URL"
+            const link = item.properties.URL?.url || "#";
+            
+            // 處理標籤 (假設欄位叫 "Tags")
+            const tags = item.properties.Tags?.multi_select || [];
+            const tagsHTML = tags.map(tag => `<span class="tag" style="background-color: ${tag.color}">${tag.name}</span>`).join('');
+            // ------------------------------------------
+
+            return `
+              <a href="${link}" target="_top" class="swiper-slide">
+                <div class="image-container">
+                  <img src="${img}" alt="${title}">
+                </div>
+                <div class="info-container">
+                  <div class="date">${date}</div>
+                  <h3>${title}</h3>
+                  <div class="tags">
+                    ${tagsHTML}
                   </div>
-                </a>
-              `;
-        }).join('');
+                </div>
+              </a>
+            `;
+          }).join('');
+        
+          console.log("資料遍歷渲染完成！");
+          
+          // 渲染完後啟動 Swiper
+          if (typeof initSwiper === "function") {
+            initSwiper(); 
+          }
 
-        // 4. 重要：資料渲染完後，才初始化或更新 Swiper
-        // 如果你原本就有 Swiper，記得呼叫 swiper.update()
-        console.log("資料遍歷渲染完成！");
-
-      } catch (error) {
-        console.error("抓取 API 發生錯誤:", error);
-        wrapper.innerHTML = "<p>暫時無法載入，請稍後再試。</p>";
+        } catch (error) {
+          console.error("錯誤:", error);
+          wrapper.innerHTML = "<p>資料載入失敗</p>";
+        }
       }
-    }
 
-    fetchAndRenderNews();  
+      fetchAndRenderNews();  
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
