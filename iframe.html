@@ -16,6 +16,16 @@
     body{
         border: 2px solid blue;
     }
+
+    @media (min-width: 800px) {
+    iframe {
+        /* 翻譯上面的數學公式：
+           300px (基礎) + 25vw (寬度的 25%)
+           clamp 限制它最矮不低於 650px，最高不超過 850px
+        */
+        height: clamp(650px, calc(300px + 25vw), 850px);
+        }
+    }
     </style>
 </head>
 <body>
@@ -27,24 +37,5 @@
         title="Notion Carousel"
     ></iframe>
     </div>
-
-    <script>
-    // 自動調整 iframe 高度的腳本（選用）
-    // 為了確保 iframe 不會出現內部捲軸，我們可以固定一個高度比例
-    function adjustIframeHeight() {
-            const iframe = document.getElementById('carousel-iframe');
-            if (iframe) {
-            const width = iframe.offsetWidth;
-            
-            if (width <= 700) {
-                iframe.style.height = (width * 1.2) + "px";
-            }else {
-                iframe.style.height = (300 + width * 0.25) + "px"; 
-            }
-        }
-    }
-    window.addEventListener('resize', adjustIframeHeight);
-    window.addEventListener('load', adjustIframeHeight);
-    </script>
 </body>
 </html>
