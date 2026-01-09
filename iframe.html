@@ -36,8 +36,10 @@
             if (iframe) {
             const width = iframe.offsetWidth;
             
-            if (width <= 800) {
-                iframe.style.height = (width * 0.65) + "px"; 
+            if (width <= 600) {
+                iframe.style.height = (width * 0.7) + "px";
+            }else if (600 <= width && width <= 800) {
+                iframe.style.height = (width * 0.65) + "px";
             }else if (800 <= width && width <= 1000) {
                 iframe.style.height = (width * 0.55) + "px";
             }else if (1000 <= width && width <= 1200) {
