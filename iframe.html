@@ -12,6 +12,10 @@
         width: 100%;
         border: none;
     }
+
+    body{
+        border: 2px solid blue;
+    }
     </style>
 </head>
 <body>
@@ -32,20 +36,22 @@
             if (iframe) {
             const width = iframe.offsetWidth;
             
-            if (width <= 768) {
-                iframe.style.height = (width * 0.63) + "px"; 
-            }else if (768 <= width && width <= 1024) {
-                iframe.style.height = (width * 0.54) + "px";
-            }else if (1024 <= width && width <= 1200) {
+            if (width <= 800) {
+                iframe.style.height = (width * 0.65) + "px"; 
+            }else if (800 <= width && width <= 1000) {
+                iframe.style.height = (width * 0.55) + "px";
+            }else if (1000 <= width && width <= 1200) {
                 iframe.style.height = (width * 0.5) + "px";
             }else if (1200 <= width && width <= 1400) {
-                iframe.style.height = (width * 0.47) + "px";
+                iframe.style.height = (width * 0.45) + "px";
             }else if (1400 <= width && width <= 1600) {
                 iframe.style.height = (width * 0.43) + "px";
-            }else if (1600 <= width && width <= 1920) {
-                iframe.style.height = (width * 0.41) + "px";
+            }else if (1600 <= width && width <= 1800) {
+                iframe.style.height = (width * 0.4) + "px";
+            }else if (1800 <= width && width <= 2000) {
+                iframe.style.height = (width * 0.38) + "px";
             }else {
-                iframe.style.height = (width * 0.36) + "px"; 
+                iframe.style.height = (width * 0.33) + "px"; 
             }
         }
     }
