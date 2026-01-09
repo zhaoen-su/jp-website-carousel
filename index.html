@@ -131,8 +131,8 @@
             // 使用 map + join 是為了處理標題被切斷成多個片段的情況
             const title = item.properties.title?.title?.map(t => t.plain_text).join("") || "最新消息";
 
-            // 2. 修正日期抓取 (對應 JSON 的 "date")
-            const date = item.properties.date?.date?.start || "無日期";
+            // 2. 修正日期抓取 (對應 JSON 的 "date") 
+            // const date = item.properties.date?.date?.start || "無日期"; // 20260109disabled
 
             // 3. 修正圖片抓取
             const img = item.properties.cover?.files?.[0]?.file?.url || 
