@@ -17,14 +17,20 @@
         border: 2px solid blue;
     }
 
-    @media (min-width: 800px) {
-    iframe {
-        /* 翻譯上面的數學公式：
-           300px (基礎) + 25vw (寬度的 25%)
-           clamp 限制它最矮不低於 650px，最高不超過 850px
-        */
-        height: clamp(650px, calc(300px + 25vw), 850px);
+    @media (min-width: 801px) {
+        iframe {
+            /* 翻譯上面的數學公式：
+            300px (基礎) + 25vw (寬度的 25%)
+            clamp 限制它最矮不低於 650px，最高不超過 850px
+            */
+            height: clamp(650px, calc(300px + 25vw), 850px);
         }
+    }
+
+    @media (max-width: 800px) {
+        iframe {
+            height: 550px;
+        }    
     }
     </style>
 </head>
