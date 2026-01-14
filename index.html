@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans JP', sans-serif;
+    }
+    .swiper {
+      width: 100%;
+      padding-bottom: 40px; /* 留空間給圓點 */
+    }
+
+    .swiper-slide {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      color: inherit;
+
+    }
+
+    /* 圖片樣式 */
+    .image-container {
+      width: 100%;
+      aspect-ratio: 16 / 9; /* 強制圖片比例，避免畫面跳動 */
+      overflow: hidden;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      aspect-ratio: 21 / 9;
+      /* 單位圖片寬度*/
+      max-width: 985px;
+      margin: 0 auto;
+
+    }
+
+    .swiper-wrapper{
+    }
+    
+    .image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* 資訊區塊樣式 */
+    .info-container {
+        width: 80%;
+        margin: 50px auto 10px auto;
+    }
+
+    .date { 
+      font-size: 2rem; 
+      color: #111; 
+      margin-bottom: 4px; 
+    }
+
+    h3 { 
+      font-size: 2.5rem; 
+      margin: 4px 0; 
+      color: #111;
+      line-height: 1.4;
+      white-space: normal;
+    }
+
+    .tags { display: flex; gap: 8px; margin-top: 8px; }
+
+    .tag {
+      font-size: 1.75rem;
+      padding: 5px 20px;
+      background: #111;
+      border-radius: 10px;
+      color: #fff;
+    }
+
+    /* 圓點樣式微調 */
+    .swiper-pagination-bullet-active { background: #000; }
+
+    /* RWD */
+    @media (max-width: 800px){
+      .date{
+          font-size: 16px;
+      }
+
+      h3{
+          font-size: 24px;
+      }
+
+      .tag{
+        font-size: 10px;
+      }
+
+      
+      .image-container{
+        aspect-ratio: 4 / 3;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="swiper">
+    <div class="swiper-wrapper" id="swiper-wrapper"></div>
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  </div>
+
+  <script>
+      const WORKER_URL = "https://jp-website-slider-notionapi.zhaoen.workers.dev";
+
+      async function fetchAndRenderNews() {
+        const wrapper = document.getElementById('swiper-wrapper');
+        
+        try {
+
+          const response = await fetch(WORKER_URL, {
+            method: 'POST', // 確保你的 Worker 真的需要 POST (通常 GET 也可以)
+          });
+
+          const data = await response.json(); 
+
+          // 檢查 results 是否存在 (Notion API 回傳的資料是在 results 陣列裡)
+          const listData = data.results || [];
+
+          wrapper.innerHTML = listData.map(item => {
+              
+            // 1. 修正標題抓取 (對應 JSON 的 "title")
+            // 使用 map + join 是為了處理標題被切斷成多個片段的情況
+            const title = item.properties.title?.title?.map(t => t.plain_text).join("") || "最新消息";
+
+            // 2. 修正日期抓取 (對應 JSON 的 "date") 
+            // const date = item.properties.date?.date?.start || "無日期"; // 20260109 disabled 渲染時可以再加回
+
+            // 3. 修正圖片抓取
+            const img = item.properties.cover?.files?.[0]?.file?.url || 
+                        item.properties.cover?.files?.[0]?.external?.url || 
+                        'https://placehold.co/600x400?text=No+Image'; // 暫時預設圖
+
+            // 4. 修正連結 (使用 Notion 內建的 public_url)
+            const link = item.public_url || item.url || "#";
+            
+            // 5. 修正標籤抓取 (對應 JSON 的 "category")
+            const tags = item.properties.category?.multi_select || [];
+            
+            // Notion 回傳的顏色 (如 "red") 可以直接用，但 "default" 在 CSS 會無效，需注意
+            const tagsHTML = tags.map(tag => {
+              const colorStyle = tag.color === 'default' ? '#ccc' : tag.color; // 簡單處理預設色
+              return `<span class="tag" style="background-color: ${colorStyle}; padding: 2px 6px; border-radius: 4px; color: white; margin-right: 4px;">${tag.name}</span>`;
+            }).join('');
+
+            // ------------------------------------------
+
+            return `
+              <a target="_top" class="swiper-slide">
+                <div class="image-container">
+                  <img src="${img}" alt="${title}">
+                </div>
+                <div class="info-container">
+                  <h3>${title}</h3>
+                  <div class="tags">
+                    ${tagsHTML}
+                  </div>
+                </div>
+              </a>
+            `;
+          }).join('');
+        
+          // 渲染完後啟動 Swiper
+          if (typeof initSwiper === "function") {
+            initSwiper(); 
+          }
+
+        } catch (error) {
+          console.error("錯誤:", error);
+          wrapper.innerHTML = "<p>資料載入失敗</p>";
+        }
+      }
+
+      fetchAndRenderNews();  
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    const swiper = new Swiper('.swiper', {
+      loop: true,
+      autoplay: { delay: 5000 },
+      pagination: { el: '.swiper-pagination', clickable: true },
+      slidesPerView: '1.7',
+      spaceBetween: 50,
+      centeredSlides: true,
+
+
+      navigation: {
+        nextEl: '.swiper-button-next', // 對應 HTML 中的 class
+        prevEl: '.swiper-button-prev',
+      },
+
+      // 20261113新增 更多swiper參數
+      // roundLengths: true,
+      // obseerver: true,
+      // obseerverParents: true,
+
+      breakpoints: {
+        640: {
+          slidesPerView: '1.2',
+          spaceBetween: 30,
+        },
+
+        1024: {
+          // 不加的話會跑掉 先留著
+        }
+      }
+      
+    });
+  </script>
+</body>
+</html>
