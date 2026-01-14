@@ -111,6 +111,8 @@
   <div class="swiper">
     <div class="swiper-wrapper" id="swiper-wrapper"></div>
     <div class="swiper-pagination"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
   </div>
 
   <script>
@@ -197,6 +199,12 @@
       spaceBetween: 50,
       centeredSlides: true,
 
+
+      navigation: {
+        nextEl: '.swiper-button-next', // 對應 HTML 中的 class
+        prevEl: '.swiper-button-prev',
+      },
+
       // 20261113新增 更多swiper參數
       // roundLengths: true,
       // obseerver: true,
@@ -212,6 +220,7 @@
           // 不加的話會跑掉 先留著
         }
       }
+      
     });
   </script>
 </body>
