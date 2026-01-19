@@ -74,6 +74,14 @@
       color: #111;
       line-height: 1.4;
       white-space: normal;
+      /* 1. 必須將 display 設定為 -webkit-box 才能使用 line-clamp */
+      display: -webkit-box;
+      /* 2. 設定要在第幾行截斷 (這裡設為 2) */
+      -webkit-line-clamp: 2;
+      /* 3. 設定排列方向為垂直 */
+      -webkit-box-orient: vertical;
+      /* 4. 隱藏超出的內容 */
+      overflow: hidden;
     }
 
     .tags { display: flex; gap: 8px; margin-top: 8px; }
