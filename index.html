@@ -30,9 +30,14 @@
     .swiper-slide {
       display: flex;
       flex-direction: column;
+    }
+
+    .swiper-slide a{
+      display: block;
+      height: 100%;
+      width: 100%;
       text-decoration: none;
       color: inherit;
-
     }
 
     /* 圖片樣式 */
@@ -160,7 +165,7 @@
                         'https://placehold.co/600x400?text=No+Image'; // 暫時預設圖
 
             // 4. 修正連結 (使用 Notion 內建的 public_url)
-            const link = item.public_url || item.url || "#";
+            const link = item.properties.url.url || "#";
             
             // 5. 修正標籤抓取 (對應 JSON 的 "category")
             const tags = item.properties.category?.multi_select || [];
@@ -174,17 +179,19 @@
             // ------------------------------------------
 
             return `
-              <a href="${link}" target="_top" class="swiper-slide" onclick="event.stopPropagation()">
-                <div class="image-container">
-                  <img src="${img}" alt="${title}">
-                </div>
+              <div class="swiper-slide">
+                <a href="${link}" target="_blank">
+                  <div class="image-container">
+                    <img src="${img}" alt="${title}">
+                  </div>
+                </a>
                 <div class="info-container">
                   <h3>${title}</h3>
                   <div class="tags">
                     ${tagsHTML}
                   </div>
                 </div>
-              </a>
+              </div>
             `;
           }).join('');
         
