@@ -51,8 +51,7 @@
       margin: 0 auto;
     }
 
-    .swiper-wrapper{
-    }
+    /* .swiper-wrapper 目前不需要額外樣式 */
     
     .image-container img {
       width: 100%;
@@ -83,6 +82,7 @@
       display: -webkit-box;
       /* 2. 設定要在第幾行截斷 (這裡設為 2) */
       -webkit-line-clamp: 2;
+      line-clamp: 2;
       /* 3. 設定排列方向為垂直 */
       -webkit-box-orient: vertical;
       /* 4. 隱藏超出的內容 */
@@ -133,8 +133,60 @@
     <div class="swiper-button-next"></div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
       const WORKER_URL = "https://jp-website-slider-notionapi.zhaoen.workers.dev";
+      let swiper = null;
+
+      function initSwiper(slideCount) {
+        // 重新渲染 slide 後，保證用「最新 DOM」重建 Swiper（loop 模式特別需要）
+        if (swiper) {
+          try { swiper.destroy(true, true); } catch (_) {}
+          swiper = null;
+        }
+
+        const enableLoop = slideCount > 2;
+        const enableAutoplay = slideCount > 1;
+
+        swiper = new Swiper('.swiper', {
+          loop: enableLoop,
+          autoplay: enableAutoplay ? { delay: 5000, disableOnInteraction: false } : false,
+          pagination: slideCount > 1 ? { el: '.swiper-pagination', clickable: true } : false,
+          slidesPerView: 1.2,
+          spaceBetween: 20,
+          centeredSlides: true,
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+          // 重要：iframe/動態內容下，讓 Swiper 自動觀察 DOM/父層尺寸變化
+          observer: true,
+          observeParents: true,
+          watchOverflow: true,
+          breakpoints: {
+            1024: {
+              slidesPerView: 1.7,
+              spaceBetween: 50,
+            }
+          }
+        });
+
+        // 確保 pagination/初始 slide 對齊（loop 模式下尤其重要）
+        if (enableLoop) {
+          swiper.slideToLoop(0, 0, false);
+        } else {
+          swiper.slideTo(0, 0, false);
+        }
+
+        // 圖片載入後更新尺寸（避免初始高度/寬度計算不準）
+        const imgs = document.querySelectorAll('.image-container img');
+        imgs.forEach(img => {
+          if (!img.complete) {
+            img.addEventListener('load', () => swiper?.update(), { once: true });
+            img.addEventListener('error', () => swiper?.update(), { once: true });
+          }
+        });
+      }
 
       async function fetchAndRenderNews() {
         const wrapper = document.getElementById('swiper-wrapper');
@@ -196,9 +248,8 @@
           }).join('');
         
           // 渲染完後啟動 Swiper
-          if (typeof initSwiper === "function") {
-            initSwiper(); 
-          }
+          const slideCount = wrapper.children.length;
+          initSwiper(slideCount);
 
         } catch (error) {
           console.error("錯誤:", error);
@@ -207,37 +258,6 @@
       }
 
       fetchAndRenderNews();  
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script>
-    const swiper = new Swiper('.swiper', {
-      loop: true,
-      autoplay: { delay: 5000 },
-      pagination: { el: '.swiper-pagination', clickable: true },
-      slidesPerView: '1.2',
-      spaceBetween: 20,
-      centeredSlides: true,
-
-
-      navigation: {
-        nextEl: '.swiper-button-next', // 對應 HTML 中的 class
-        prevEl: '.swiper-button-prev',
-      },
-
-      // 20261113新增 更多swiper參數
-      // roundLengths: true,
-      // obseerver: true,
-      // obseerverParents: true,
-
-      breakpoints: {
-        1024: {
-          slidesPerView: '1.7',
-          spaceBetween: 50,
-        }
-      }
-      
-    });
   </script>
 </body>
 </html>
