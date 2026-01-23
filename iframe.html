@@ -29,36 +29,41 @@
     </div>
 
     <script>
-    // 自動調整 iframe 高度的腳本（選用）
-    // 為了確保 iframe 不會出現內部捲軸，我們可以固定一個高度比例
+    // 自動調整 iframe 高度的腳本
     function adjustIframeHeight() {
-            const iframe = document.getElementById('carousel-iframe');
-            if (iframe) {
+        const iframe = document.getElementById('carousel-iframe');
+        if (iframe) {
             const width = iframe.offsetWidth;
             
             if (width <= 640) {
                 iframe.style.height = (width * 1.03) + "px";
             }else if (641 <= width && width <= 768) {
                 iframe.style.height = (width * 1.04) + "px";
-            }else if (769 <= width && width <= 1024) {
-                iframe.style.height = 900 + "px";
+            }else if (769 <= width && width <= 850) {
+                iframe.style.height = (width * 1) + "px";
+            }else if (851 <= width && width <= 1024) {
+                iframe.style.height = 800 + "px";
             }else if (1025 <= width && width <= 1200) {
-                iframe.style.height = 900 + "px";
+                iframe.style.height = 720 + "px";
             }else if (1201 <= width && width <= 1400) {
-                iframe.style.height = 900 + "px";
+                iframe.style.height = 800 + "px";
             }else if (1401 <= width && width <= 1600) {
-                iframe.style.height = 1000 + "px";
+                iframe.style.height = 900 + "px";
             }else if (1601 <= width && width <= 1800) {
                 iframe.style.height = 1000 + "px";
             }else if (1801 <= width && width <= 2000) {
                 iframe.style.height = 1000 + "px";
             }else {
-                iframe.style.height = (width * 0.33) + "px"; 
+                iframe.style.height = 1000 + "px"; 
             }
         }
     }
+    
     window.addEventListener('resize', adjustIframeHeight);
     window.addEventListener('load', adjustIframeHeight);
+    
+    // 讓內層 iframe 可以調用此函數
+    window.adjustIframeHeight = adjustIframeHeight;
     </script>
 </body>
 </html>
